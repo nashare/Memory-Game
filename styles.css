@@ -1,0 +1,70 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #60D3B8;
+}
+
+header {
+    font-size: 4vmin;
+    letter-spacing: 0.5vmin;
+}
+
+h1 {
+    font-size: 2vmin;
+}
+
+h2 {
+    font-size: 3vmin;
+    margin-top: 2vmin;
+}
+
+span {
+    font-size: 5vmin;
+    margin-top: 0;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(8, 10vmin);
+    grid-template-rows: repeat(5, 10vmin);
+    gap: 1vmin;
+    margin-top: 4vmin;
+}
+
+#board>div {
+    background-color: #D9D9D9;
+    /* provide a border radius to round the corners of the div */
+}
+
+button {
+    min-width: 14vmin;
+    margin-top: 4vmin;
+    padding: 1vmin;
+    font-size: 2vmin;
+    border: 0.2vmin solid black;
+    border-radius: 4vmin;
+    background-color: #D9D9D9;
+    /* set padding, font-size, and color for the button */
+    /* set a border and border radius for the button */
+}
+
+button:hover {
+    background-color: white;
+    color: black;
+}
+
+#timer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
