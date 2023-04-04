@@ -23,6 +23,11 @@ h1 {
 }
 
 h2 {
+    display: none;
+    font-size: 4vmin;
+}
+
+h3 {
     font-size: 3vmin;
     margin-top: 2vmin;
 }
@@ -40,7 +45,7 @@ span {
     margin-top: 4vmin;
 }
 
-#board>div {
+#board>i {
     background-color: #D9D9D9;
     /* provide a border radius to round the corners of the div */
 }
