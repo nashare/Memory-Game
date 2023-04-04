@@ -73,3 +73,11 @@ button:hover {
     justify-content: center;
     flex-direction: column;
 }
+
+i::before {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 10vmin;
+    height: 10vmin;
+}
