@@ -14,11 +14,12 @@ const oneCard = {
 };
 let cards = [];
 let cardsToFlip = [null, null];
-let pairClosed = 0;
+let pairClosed;
 let cardsCount = 30;
+let timerMinutes = 2;
 
 
-const winLostEl = document.querySelector('h2');
+const timer = document.querySelector('span');
 const playAgainBtn = document.getElementById('play');
 const timerEl = document.querySelector('span');
 const board = document.getElementById('board');
@@ -36,6 +37,8 @@ function initialize() {
     gameActive = true;
     firstCard = null;
     secondCard = null;
+    pairClosed = 0;
+    timer.innerHTML = `${timerMinutes}:00`;
     const subCopyCardsNum = iconClasses.slice(0, cardsCount/2);
     let allCardsName = subCopyCardsNum.concat(subCopyCardsNum);
     shuffleArray(allCardsName);
@@ -43,7 +46,6 @@ function initialize() {
     for (let i = 0; i < cardsCount; i++) {
         cards[i] = structuredClone(oneCard);
     }
-    console.log(allCardsName);
     allCardsName.forEach((name, ind) => {
         cards[ind].iconClass = name;
     });
@@ -85,6 +87,22 @@ function render() {
     )
 };
 
+// const showTimer = setInterval(() => {
+//     const minutes = Math.floor(timerMinutes / 60);
+//     let seconds = timerMinutes % 60;
+
+//     seconds = seconds < 10 ? '0' + seconds : seconds;
+
+//     timer.innerHTML = `${minutes}:${seconds}`;
+//     timerMinutes--;
+
+//     if (timerMinutes < 0) {
+//         clearInterval(showTimer);
+//         timer.innerHTML = 'Time is up!';
+//     }
+// }, 1000);
+
+
 function handleClick(evt) {
     if (evt.target.tagName != "I" || gameActive === false ||
         cards[evt.target.id].side !== "back" || cards[evt.target.id].visibility === "hidden") {
@@ -95,7 +113,6 @@ function handleClick(evt) {
             cards[cardsToFlip[0]].side = 'back';
             cards[cardsToFlip[1]].side = 'back';
             cardsToFlip = [null, null];
-            console.log(cards);
             render();
         }
         firstCard = evt.target.id;
@@ -111,6 +128,7 @@ function handleClick(evt) {
             cards[firstCard].visibility = 'hidden';
             cards[secondCard].visibility = 'hidden';
             pairClosed++;
+            console.log(pairClosed);
             setTimeout(render, 400);
         } 
         cardsToFlip = [firstCard, secondCard];
@@ -118,16 +136,17 @@ function handleClick(evt) {
         secondCard = null;
     }
     if (pairClosed === cardsCount/2) {
-        setTimeout(displayWinLostMessage, 400);
+        const message = "You won the game!";
+        setTimeout(displayWinLostMessage(message), 400);
     }
 
 }
 
-function displayWinLostMessage() {
+function displayWinLostMessage(message) {
     board.replaceChildren();
     board.style.display = 'flex';
     const winLostMessage = document.createElement("h2");
-    winLostMessage.innerText = "You won the game!";
+    winLostMessage.innerText = message;
     board.appendChild(winLostMessage);
 }
 
@@ -136,13 +155,15 @@ function handleMode(evt) {
         return;
     }
     if (evt.target.id === "easy") {
-        cardsCount = 4;
+        cardsCount = 20;
+        timerMinutes = 1;
     } else if (evt.target.id === "medium") {
         cardsCount = 30;
+        timerMinutes = 2;
     } else {
         cardsCount = 40;
+        timerMinutes = 3;
     }
-    console.log(cardsCount);
     initialize();
 }
 
