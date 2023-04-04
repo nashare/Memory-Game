@@ -151,7 +151,7 @@ function handleClick(evt) {
     }
     if (pairClosed === cardsCount/2) {
         stopTimer();
-        const message = "You won the game!";
+        const message = "You won the game! Try another difficulty level.";
         setTimeout(displayWinLostMessage(message), 400);
     }
 
