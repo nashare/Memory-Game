@@ -20,7 +20,6 @@ let timerMinutes = 2;
 let interval = null;
 
 
-const timer = document.querySelector('span');
 const restartBtn = document.getElementById('play');
 const timerEl = document.querySelector('span');
 const board = document.getElementById('board');
@@ -42,7 +41,7 @@ function initialize() {
     secondCard = null;
     pairClosed = 0;
     restartBtn.style.visibility = 'visible';
-    timer.innerHTML = `0${timerMinutes}:00`;
+    timerEl.innerHTML = `0${timerMinutes}:00`;
     const subCopyCardsNum = iconClasses.slice(0, cardsCount/2);
     let allCardsName = subCopyCardsNum.concat(subCopyCardsNum);
     shuffleArray(allCardsName);
@@ -171,6 +170,14 @@ function handleMode(evt) {
     if (evt.target.tagName !== "BUTTON") {
         return;
     }
+    const buttonsEl = [...modes.children];
+    buttonsEl.forEach(el => {
+        if (evt.target.id === el.id) {
+            el.style.backgroundColor = "white";
+        } else {
+            el.style.backgroundColor = "#D9D9D9";
+        }
+    });
     if (evt.target.id === "easy") {
         cardsCount = 20;
         timerMinutes = 1;

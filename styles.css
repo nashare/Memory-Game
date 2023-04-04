@@ -74,6 +74,10 @@ button:hover {
     color: black;
 }
 
+#medium {
+    background-color: white;
+}
+
 #timer {
     display: flex;
     align-items: center;
