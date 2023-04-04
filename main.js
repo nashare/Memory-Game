@@ -17,16 +17,17 @@ let cardsToFlip = [null, null];
 let pairClosed;
 let cardsCount = 30;
 let timerMinutes = 2;
+let interval = null;
 
 
 const timer = document.querySelector('span');
-const playAgainBtn = document.getElementById('play');
+const restartBtn = document.getElementById('play');
 const timerEl = document.querySelector('span');
 const board = document.getElementById('board');
 const modes = document.getElementById('modes');
 
 
-playAgainBtn.addEventListener('click', initialize);
+restartBtn.addEventListener('click', initialize);
 board.addEventListener('click', handleClick);
 modes.addEventListener('click', handleMode);
 
@@ -34,11 +35,14 @@ modes.addEventListener('click', handleMode);
 initialize();
 
 function initialize() {
+    stopTimer();
+    interval = null;
     gameActive = true;
     firstCard = null;
     secondCard = null;
     pairClosed = 0;
-    timer.innerHTML = `${timerMinutes}:00`;
+    restartBtn.style.visibility = 'visible';
+    timer.innerHTML = `0${timerMinutes}:00`;
     const subCopyCardsNum = iconClasses.slice(0, cardsCount/2);
     let allCardsName = subCopyCardsNum.concat(subCopyCardsNum);
     shuffleArray(allCardsName);
@@ -87,26 +91,38 @@ function render() {
     )
 };
 
-// const showTimer = setInterval(() => {
-//     const minutes = Math.floor(timerMinutes / 60);
-//     let seconds = timerMinutes % 60;
+function startTimer() {
+    let time = timerMinutes * 60 - 1;
+    interval = setInterval(() => {
+        const minutes = Math.floor(time / 60).toString().padStart(2, '0');
+        const seconds = (time % 60).toString().padStart(2, '0');
+        timerEl.textContent = `${minutes}:${seconds}`;
+        if (time === 0) {
+            clearInterval(interval);
+            if (pairClosed !== cardsCount / 2) {
+                gameActive = false;
+                const message = "You lost the game. Try once more!"
+                displayWinLostMessage(message);
+            }
+        } else {
+            time--; 
+        }
+    }, 1000);
+    return interval;
+}
 
-//     seconds = seconds < 10 ? '0' + seconds : seconds;
-
-//     timer.innerHTML = `${minutes}:${seconds}`;
-//     timerMinutes--;
-
-//     if (timerMinutes < 0) {
-//         clearInterval(showTimer);
-//         timer.innerHTML = 'Time is up!';
-//     }
-// }, 1000);
+function stopTimer() {
+    clearInterval(interval);
+}
 
 
 function handleClick(evt) {
     if (evt.target.tagName != "I" || gameActive === false ||
         cards[evt.target.id].side !== "back" || cards[evt.target.id].visibility === "hidden") {
         return;
+    }
+    if (!interval) {
+        startTimer();
     }
     if (firstCard === null && secondCard === null) {
         if (cardsToFlip[0] !== null) {
@@ -128,7 +144,6 @@ function handleClick(evt) {
             cards[firstCard].visibility = 'hidden';
             cards[secondCard].visibility = 'hidden';
             pairClosed++;
-            console.log(pairClosed);
             setTimeout(render, 400);
         } 
         cardsToFlip = [firstCard, secondCard];
@@ -136,6 +151,7 @@ function handleClick(evt) {
         secondCard = null;
     }
     if (pairClosed === cardsCount/2) {
+        stopTimer();
         const message = "You won the game!";
         setTimeout(displayWinLostMessage(message), 400);
     }
@@ -143,6 +159,7 @@ function handleClick(evt) {
 }
 
 function displayWinLostMessage(message) {
+    restartBtn.style.visibility = 'hidden';
     board.replaceChildren();
     board.style.display = 'flex';
     const winLostMessage = document.createElement("h2");
@@ -174,15 +191,4 @@ function shuffleArray(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
 }
-
-// 6) Create and render the timer
-// 	Probably have to create a setInterval() method and when it’s time to freeze the times - clearInterval().I need more time to experiment with this part, I can't describe it in detail now in pseudocode. 
-
-
-// 7.5) If all the cards are hidden and the time left >= 0, “freeze” the timer on the screen and update the text of the h element to “You win”, update gameActive to false
-// 7.6) If the time is up, update the text “You lost”, set timer on the screen to 0: 00 and update gameActive to false
-
-// 8) Handle a player clicking the Play Again button:
-// 8.1) Clear the innerText of the win / lost message.
-// 8.2) Render the board using the function from the step 4
 

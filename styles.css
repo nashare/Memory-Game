@@ -28,12 +28,12 @@ h2 {
 
 h3 {
     font-size: 3vmin;
-    margin-top: 2vmin;
+    margin: 1vmin auto;
 }
 
 span {
-    font-size: 5vmin;
-    margin-top: 0;
+    font-size: 4vmin;
+    margin: 1vmin auto;
 }
 
 #board {
@@ -54,12 +54,12 @@ span {
 }
 
 p {
-    margin: 0;
+    margin: 1vmin;
 }
 
 button {
     min-width: 14vmin;
-    margin-top: 4vmin;
+    margin-top: 2vmin;
     padding: 1vmin;
     font-size: 2vmin;
     border: 0.2vmin solid black;
@@ -79,6 +79,10 @@ button:hover {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+}
+
+#modes {
+    margin-top: 0;
 }
 
 i::before {
