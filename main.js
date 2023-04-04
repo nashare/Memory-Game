@@ -15,18 +15,19 @@ const oneCard = {
 let cards = [];
 let cardsToFlip = [null, null];
 let pairClosed = 0;
-let cardsCount = 40;
+let cardsCount = 30;
 
 
-const cellsEl = document.querySelectorAll('#board > i');
 const winLostEl = document.querySelector('h2');
-const playAgainBtn = document.querySelector('button');
+const playAgainBtn = document.getElementById('play');
 const timerEl = document.querySelector('span');
 const board = document.getElementById('board');
+const modes = document.getElementById('modes');
 
 
 playAgainBtn.addEventListener('click', initialize);
 board.addEventListener('click', handleClick);
+modes.addEventListener('click', handleMode);
 
 
 initialize();
@@ -35,22 +36,41 @@ function initialize() {
     gameActive = true;
     firstCard = null;
     secondCard = null;
-    winLostEl.style.display = 'none';
-    let allCardsName = iconClasses.concat(iconClasses);
+    const subCopyCardsNum = iconClasses.slice(0, cardsCount/2);
+    let allCardsName = subCopyCardsNum.concat(subCopyCardsNum);
     shuffleArray(allCardsName);
     cards = [];
     for (let i = 0; i < cardsCount; i++) {
         cards[i] = structuredClone(oneCard);
     }
+    console.log(allCardsName);
     allCardsName.forEach((name, ind) => {
         cards[ind].iconClass = name;
     });
-    console.log(cards);
+    board.replaceChildren();
+    board.style.display = 'grid';
+    if (cardsCount === 40) {
+        board.style.gridTemplateColumns = "repeat(8, 10vmin)";
+        board.style.gridTemplateRows = "repeat(5, 10vmin)";
+    } else if (cardsCount === 30) {
+        board.style.gridTemplateColumns = "repeat(6, 10vmin)";
+        board.style.gridTemplateRows = "repeat(5, 10vmin)";
+    } else {
+        board.style.gridTemplateColumns = "repeat(4, 10vmin)";
+        board.style.gridTemplateRows = "repeat(5, 10vmin)";
+    }
+
+    for (let i = 0; i < cardsCount; i++) {
+        const newCard = document.createElement("i");
+        newCard.id = i;
+        board.appendChild(newCard);
+    }
     render();
 }
 
 function render() {
-    cellsEl.forEach((cell, ind) => {
+    const cardsEl = document.querySelectorAll('#board > i');
+    cardsEl.forEach((cell, ind) => {
         if (cards[ind].visibility === 'hidden') {
             cell.style.visibility = "hidden";
         } 
@@ -87,8 +107,6 @@ function handleClick(evt) {
         render();
     } 
     if (firstCard !== null && secondCard !== null) {
-        console.log(cards[firstCard].iconClass);
-        console.log(cards[secondCard].iconClass);
         if (cards[firstCard].iconClass === cards[secondCard].iconClass) {
             cards[firstCard].visibility = 'hidden';
             cards[secondCard].visibility = 'hidden';
@@ -100,11 +118,32 @@ function handleClick(evt) {
         secondCard = null;
     }
     if (pairClosed === cardsCount/2) {
-        board.style.display = 'none';
-        winLostEl.style.display = 'block';
-        winLostEl.innerHTML = "You won the game!"
+        setTimeout(displayWinLostMessage, 400);
     }
 
+}
+
+function displayWinLostMessage() {
+    board.replaceChildren();
+    board.style.display = 'flex';
+    const winLostMessage = document.createElement("h2");
+    winLostMessage.innerText = "You won the game!";
+    board.appendChild(winLostMessage);
+}
+
+function handleMode(evt) {
+    if (evt.target.tagName !== "BUTTON") {
+        return;
+    }
+    if (evt.target.id === "easy") {
+        cardsCount = 4;
+    } else if (evt.target.id === "medium") {
+        cardsCount = 30;
+    } else {
+        cardsCount = 40;
+    }
+    console.log(cardsCount);
+    initialize();
 }
 
 //from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array

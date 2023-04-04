@@ -23,7 +23,6 @@ h1 {
 }
 
 h2 {
-    display: none;
     font-size: 4vmin;
 }
 
@@ -48,6 +47,14 @@ span {
 #board>i {
     background-color: #D9D9D9;
     /* provide a border radius to round the corners of the div */
+}
+
+#modes {
+    margin-top: 0;
+}
+
+p {
+    margin: 0;
 }
 
 button {
