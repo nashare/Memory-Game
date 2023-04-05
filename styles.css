@@ -46,7 +46,6 @@ span {
 
 #board>i {
     background-color: #D9D9D9;
-    /* provide a border radius to round the corners of the div */
 }
 
 #modes {
@@ -65,8 +64,6 @@ button {
     border: 0.2vmin solid black;
     border-radius: 4vmin;
     background-color: #D9D9D9;
-    /* set padding, font-size, and color for the button */
-    /* set a border and border radius for the button */
 }
 
 button:hover {

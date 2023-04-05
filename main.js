@@ -2,16 +2,15 @@ const iconClasses = ['fa-star', 'fa-music', 'fa-moon', 'fa-heart', 'fa-gamepad',
     'fa-fish', 'fa-face-smile', 'fa-bell', 'fa-paperclip', 'fa-car', 'fa-gift', 
     'fa-anchor', 'fa-umbrella', 'fa-camera', 'fa-droplet', 'fa-fire', 'fa-plane', 
     'fa-rocket', 'fa-key', 'fa-snowflake'];
+const oneCard = {
+    visibility: 'visible',
+    iconClass: null,
+    side: 'back'
+};
 
 
 let firstCard;
 let secondCard;
-let gameActive = false;
-const oneCard = {
-    visibility: 'visible',
-    iconClass: null,
-    side: "back"
-};
 let cards = [];
 let cardsToFlip = [null, null];
 let pairClosed;
@@ -36,10 +35,10 @@ initialize();
 function initialize() {
     stopTimer();
     interval = null;
-    gameActive = true;
     firstCard = null;
     secondCard = null;
     pairClosed = 0;
+    cardsToFlip = [null, null];
     restartBtn.style.visibility = 'visible';
     timerEl.innerHTML = `0${timerMinutes}:00`;
     const subCopyCardsNum = iconClasses.slice(0, cardsCount/2);
@@ -47,24 +46,26 @@ function initialize() {
     shuffleArray(allCardsName);
     cards = [];
     for (let i = 0; i < cardsCount; i++) {
-        cards[i] = structuredClone(oneCard);
+        cards[i] = {...oneCard};
     }
     allCardsName.forEach((name, ind) => {
         cards[ind].iconClass = name;
     });
     board.replaceChildren();
     board.style.display = 'grid';
-    if (cardsCount === 40) {
-        board.style.gridTemplateColumns = "repeat(8, 10vmin)";
-        board.style.gridTemplateRows = "repeat(5, 10vmin)";
-    } else if (cardsCount === 30) {
-        board.style.gridTemplateColumns = "repeat(6, 10vmin)";
-        board.style.gridTemplateRows = "repeat(5, 10vmin)";
-    } else {
-        board.style.gridTemplateColumns = "repeat(4, 10vmin)";
-        board.style.gridTemplateRows = "repeat(5, 10vmin)";
+    switch (cardsCount) {
+        case 40:
+            board.style.gridTemplateColumns = "repeat(8, 10vmin)";
+            board.style.gridTemplateRows = "repeat(5, 10vmin)";
+            break;
+        case 30:
+            board.style.gridTemplateColumns = "repeat(6, 10vmin)";
+            board.style.gridTemplateRows = "repeat(5, 10vmin)";
+            break;
+        case 20:
+            board.style.gridTemplateColumns = "repeat(4, 10vmin)";
+            board.style.gridTemplateRows = "repeat(5, 10vmin)";
     }
-
     for (let i = 0; i < cardsCount; i++) {
         const newCard = document.createElement("i");
         newCard.id = i;
@@ -93,13 +94,12 @@ function render() {
 function startTimer() {
     let time = timerMinutes * 60 - 1;
     interval = setInterval(() => {
-        const minutes = Math.floor(time / 60).toString().padStart(2, '0');
+        const minutes = Math.floor(time / 60).toString();
         const seconds = (time % 60).toString().padStart(2, '0');
-        timerEl.textContent = `${minutes}:${seconds}`;
+        timerEl.textContent = `0${minutes}:${seconds}`;
         if (time === 0) {
             clearInterval(interval);
             if (pairClosed !== cardsCount / 2) {
-                gameActive = false;
                 const message = "You lost the game. Try once more!"
                 displayWinLostMessage(message);
             }
@@ -116,15 +116,14 @@ function stopTimer() {
 
 
 function handleClick(evt) {
-    if (evt.target.tagName != "I" || gameActive === false ||
-        cards[evt.target.id].side !== "back" || cards[evt.target.id].visibility === "hidden") {
+    if (evt.target.tagName != "I" || cards[evt.target.id].side !== "back" || cards[evt.target.id].visibility === "hidden") {
         return;
     }
     if (!interval) {
         startTimer();
     }
     if (firstCard === null && secondCard === null) {
-        if (cardsToFlip[0] !== null) {
+        if (cardsToFlip[0] !== null && cardsToFlip[1] !== null) {
             cards[cardsToFlip[0]].side = 'back';
             cards[cardsToFlip[1]].side = 'back';
             cardsToFlip = [null, null];
@@ -143,7 +142,7 @@ function handleClick(evt) {
             cards[firstCard].visibility = 'hidden';
             cards[secondCard].visibility = 'hidden';
             pairClosed++;
-            setTimeout(render, 400);
+            setTimeout(render, 700);
         } 
         cardsToFlip = [firstCard, secondCard];
         firstCard = null;
@@ -152,7 +151,10 @@ function handleClick(evt) {
     if (pairClosed === cardsCount/2) {
         stopTimer();
         const message = "You won the game! Try another difficulty level.";
-        setTimeout(displayWinLostMessage(message), 400);
+        setTimeout(function () {
+            displayWinLostMessage(message);
+        }, 700);
+
     }
 
 }
