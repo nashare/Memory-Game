@@ -84,7 +84,7 @@ function render() {
             cell.setAttribute("class", "");
             cell.style.backgroundColor = "#D9D9D9";
         } else {
-            cell.setAttribute("class", " fa-solid " + cards[ind].iconClass);
+            cell.setAttribute("class", "fa-solid " + cards[ind].iconClass);
             cell.style.backgroundColor = "white";
         }
         }
