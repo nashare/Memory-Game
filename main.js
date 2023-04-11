@@ -40,7 +40,7 @@ function initialize() {
     pairClosed = 0;
     cardsToFlip = [null, null];
     restartBtn.style.visibility = 'visible';
-    let time = timeToShow(timerSeconds);
+    const time = timeToShow(timerSeconds);
     timerEl.innerHTML = `${time.minutes}:${time.seconds}`;
     const subCopyCardsNum = iconClasses.slice(0, cardsCount/2);
     let allCardsName = subCopyCardsNum.concat(subCopyCardsNum);
@@ -76,8 +76,8 @@ function initialize() {
 }
 
 function timeToShow(timerSeconds) {
-    let minutes = Math.floor(timerSeconds/60);
-    let seconds = timerSeconds - minutes * 60;
+    const minutes = Math.floor(timerSeconds/60);
+    const seconds = timerSeconds - minutes * 60;
     return {
         minutes: minutes.toString().padStart(2, '0'),
         seconds: seconds.toString().padStart(2, '0'),
