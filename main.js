@@ -15,7 +15,7 @@ let cards = [];
 let cardsToFlip = [null, null];
 let pairClosed;
 let cardsCount = 30;
-let timerMinutes = 2;
+let timerSeconds = 60;
 let interval = null;
 
 
@@ -40,7 +40,8 @@ function initialize() {
     pairClosed = 0;
     cardsToFlip = [null, null];
     restartBtn.style.visibility = 'visible';
-    timerEl.innerHTML = `0${timerMinutes}:00`;
+    let time = timeToShow(timerSeconds);
+    timerEl.innerHTML = `${time.minutes}:${time.seconds}`;
     const subCopyCardsNum = iconClasses.slice(0, cardsCount/2);
     let allCardsName = subCopyCardsNum.concat(subCopyCardsNum);
     shuffleArray(allCardsName);
@@ -74,6 +75,15 @@ function initialize() {
     render();
 }
 
+function timeToShow(timerSeconds) {
+    let minutes = Math.floor(timerSeconds/60);
+    let seconds = timerSeconds - minutes * 60;
+    return {
+        minutes: minutes.toString().padStart(2, '0'),
+        seconds: seconds.toString().padStart(2, '0'),
+    }
+}
+
 function render() {
     const cardsEl = document.querySelectorAll('#board > i');
     cardsEl.forEach((cell, ind) => {
@@ -92,19 +102,18 @@ function render() {
 };
 
 function startTimer() {
-    let time = timerMinutes * 60 - 1;
+    let secondsLeft = timerSeconds - 1;
     interval = setInterval(() => {
-        const minutes = Math.floor(time / 60).toString();
-        const seconds = (time % 60).toString().padStart(2, '0');
-        timerEl.textContent = `0${minutes}:${seconds}`;
-        if (time === 0) {
+        const time = timeToShow(secondsLeft);
+        timerEl.textContent = `${time.minutes}:${time.seconds}`;
+        if (secondsLeft === 0) {
             clearInterval(interval);
             if (pairClosed !== cardsCount / 2) {
                 const message = "You lost the game. Try once more!"
                 displayWinLostMessage(message);
             }
         } else {
-            time--; 
+            secondsLeft--; 
         }
     }, 1000);
     return interval;
@@ -182,13 +191,13 @@ function handleMode(evt) {
     });
     if (evt.target.id === "easy") {
         cardsCount = 20;
-        timerMinutes = 1;
+        timerSeconds = 30;
     } else if (evt.target.id === "medium") {
         cardsCount = 30;
-        timerMinutes = 2;
+        timerSeconds = 60;
     } else {
         cardsCount = 40;
-        timerMinutes = 3;
+        timerSeconds = 90;
     }
     initialize();
 }
